@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prep Wizard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app">
+        <div v-if="loading" class="loading-indicator">
+            Please wait while the wizard <strong>spells</strong> your questions...
+        </div>
+        <div class="container">
+            <select v-model="language">
+                <option value="English">English</option>
+                <option value="Danish">Danish</option>
+                <option value="Spanish">Spanish</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Arabic">Arabic</option>
+                <option value="Bengali">Bengali</option>
+                <option value="French">French</option>
+                <option value="Mandarin Chinese">Chinese</option>
+                <option value="Bengali">Bengali</option>
+            </select> <br>
+            <h1>Prep Wizard</h1>
+            <form @submit.prevent="generateQuestion">
+                <div>
+                    
+                    <input type="text" v-model.lazy="topic" placeholder="Enter a topic" required>
+                    <input style="margin-left: 10px;" type="number" v-model.lazy="amount"
+                        placeholder="Enter how many questions you wish" required max="30">
+                    <span v-if="topic && amount && done">Selected topic: <strong>{{ topic }}</strong>. Remaining:
+                        <strong>{{
+                            questionCount }}</strong> out of {{ amount }} questions </span>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="knowledgeLevelDropdown"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Select Knowledge Level: {{ knowledgeLevel }}
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="knowledgeLevelDropdown">
+                            <li><a class="dropdown-item" href="#" v-on:click="knowledgeLevel = 'Novice'">Novice</a></li>
+                            <li><a class="dropdown-item" href="#"
+                                    v-on:click="knowledgeLevel = 'Intermediate'">Intermediate</a></li>
+                            <li><a class="dropdown-item" href="#"
+                                    v-on:click="knowledgeLevel = 'Proficient'">Proficient</a></li>
+                            <li><a class="dropdown-item" href="#" v-on:click="knowledgeLevel = 'Advanced'">Advanced</a>
+                            </li>
+                            <li><a class="dropdown-item" href="#" v-on:click="knowledgeLevel = 'Expert'">Expert</a></li>
+                            <li><a class="dropdown-item" href="#"
+                                    v-on:click="knowledgeLevel = 'Masterful'">Masterful</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <button type="submit" :disabled="generateButtonDisabled">Generate Questions</button>
+            </form>
+            <div class="question" v-if="currentQuestion.question">
+                <h2>{{ currentQuestion.question }}</h2>
+                <ul class="list-unstyled">
+                    <li style="border-radius: 10px; border: 2px solid rgb(73, 72, 72); padding: 10px; margin: 10px;"
+                        v-for="(answer, index) in currentQuestion.answers" :key="index">
+                        <label class="form-check">
+                            <input class="form-check-input" type="radio" name="answer" :value="index"
+                                v-model="selectedAnswerIndex">
+                            <span style="margin-left: 5px;">{{ answer }}</span>
+                        </label>
+                    </li>
+                </ul>
+                <button style="background-color: rgb(3, 168, 3); width: 70%; margin: 10px;"
+                    @click="answer">Answer</button><br>
+                <div v-if="AIResponse">
+                    {{ AIResponse }} <span v-if="learnMoreLink"><a :href="learnMoreLink" target="_blank"> Learn
+                            More</a></span>
+                </div>
+                <div v-if="correctPercentage">You got <strong>{{ correctPercentage }}%</strong> correct answers</div>
+                <button style="width: 20%; background-color: orange;" @click="back"
+                    :disabled="backButtonDisabled">Back</button>
+                <button v-if="stillMore" style="width: 20%; margin-left:60%" @click="next">Next</button>
+                <button v-else style="width: 20%; margin-left:60%" @click="resetQuiz">Reset</button>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+
+</html>
