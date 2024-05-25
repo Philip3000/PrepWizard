@@ -7,7 +7,7 @@ Vue.createApp({
     data() {
         return {
             topic: '',
-            amount: 0,
+            amount: 1,
             question: "",
             answers: [],
             answer1: "",
@@ -25,7 +25,7 @@ Vue.createApp({
             stillMore: true,
             correctAnswerCount: 0,
             correctPercentage: 0,
-            knowledgeLevel: "",
+            knowledgeLevel: "Novice",
             AIResponse: "",
             questions: [],
             learnMoreLink: "",
@@ -56,8 +56,8 @@ Vue.createApp({
                               "questions": [
                                 {
                                   "question": "What is the capital of France?",
-                                  "answers": ["Paris", "London", "Berlin", "Madrid"],
-                                  "correctAnswer": "A",
+                                  "answers": ["London", "Paris", "Berlin", "Madrid"],
+                                  "correctAnswer": "B",
                                   "onWrongAnswer": "The capital of France is Paris, Better luck next time",
                                   "onCorrectAnswer": "You're right! The Capital of France is Paris"
                                 },
@@ -70,8 +70,8 @@ Vue.createApp({
                                 },
                                 {
                                   "question": "What is the chemical symbol for water?",
-                                  "answers": ["H2O", "CO2", "NaCl", "O2", "NoCl", "Lead"],
-                                  "correctAnswer": "A",
+                                  "answers": ["CO2", "NaCl", "H2O", "O2"],
+                                  "correctAnswer": "C",
                                   "onWrongAnswer": "Unfortunately it was the wrong answer, the correct answer was: H2O",
                                   "onCorrectAnswer": "Yes! The correct answer is H2O. A combination of 2 hydrogen and 1 oxygen!"
                                 }
@@ -120,29 +120,36 @@ Vue.createApp({
             }
             catch (error) {
                 console.error("Error generating content:", error);
+                alert("Error generating content. Please try refreshing:", error)
             }
             this.stillMore = true;
             this.currentQuestion = this.questions[0];
             this.loading = false;
             this.next();
+            this.correctAnswerCount = this.amount;
+
             this.done = "test";
         },
         next() {
-            this.AIResponse = null;
-            this.selectedAnswerIndex = null;
-            if (this.questionCount < this.questions.length) {
-                this.currentQuestion = this.questions[this.questionCount];
-                this.correctAnswerCount = this.amount;
-                for (let i = 0; i < this.currentQuestion.answers.length; i++) {
-                    this['answer' + (i + 1)] = this.currentQuestion.answers[i];
+            try {
+                this.AIResponse = null;
+                this.selectedAnswerIndex = null;
+                if (this.questionCount < this.questions.length) {
+                    this.currentQuestion = this.questions[this.questionCount];
+                    for (let i = 0; i < this.currentQuestion.answers.length; i++) {
+                        this['answer' + (i + 1)] = this.currentQuestion.answers[i];
+                    }
+                    this.questionCount++;
                 }
-                this.questionCount++;
+                else {
+                    this.currentQuestion = this.questions[this.questionCount];
+                }
+                if (this.questionCount === this.questions.length) {
+                    this.stillMore = false;
+                }
             }
-            else {
-                this.currentQuestion = this.questions[this.questionCount];
-            }
-            if (this.questionCount === this.questions.length) {
-                this.stillMore = false;
+            catch (error) {
+                alert("Error generating content. Please try refreshing:", error)
             }
         },
         answer() {
@@ -167,7 +174,7 @@ Vue.createApp({
         },
         learnMore() {
             var index = this.converter(this.currentQuestion.correctAnswer)
-            this.learnMoreLink = "https://www.google.com/search?q=" + this.currentQuestion.answers[index]+"+"+this.topic;
+            this.learnMoreLink = "https://www.google.com/search?q=" + this.currentQuestion.answers[index] + "+" + this.topic;
         },
         converter(string) {
             return string.charCodeAt(0) - 65;
@@ -177,7 +184,7 @@ Vue.createApp({
             this.selectedAnswerIndex = null;
             this.AIResponse = "";
             this.learnMoreLink = "";
-            this.correctPercentage = null;
+            this.correctPercentage = 0;
             this.totalAnsweredCount = 0;
             this.correctAnswerCount = 0;
             this.currentQuestion = [];
