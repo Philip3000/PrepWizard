@@ -1,3 +1,4 @@
+//For when you want to run it through a server instead of client-side.
 const express = require('express');
 const fetch = require('node-fetch');
 const app = express();
