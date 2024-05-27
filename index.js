@@ -31,7 +31,7 @@ Vue.createApp({
             learnMoreLink: "",
             currentQuestion: {},
             questionCount: 0,
-            apiKey: "AIzaSyCSbpfAp-KAwQSE2sg9VHkcGI9Mqb6AIrg"
+            apiKey: ""
         }
     },
     computed: {
