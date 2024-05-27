@@ -120,7 +120,7 @@ Vue.createApp({
             }
             catch (error) {
                 console.error("Error generating content:", error);
-                alert("Error generating content. Please try refreshing:", error)
+                alert("Error generating content. If you are located in Europe, please try using a VPN. If not, please try refreshing:", error)
             }
             this.stillMore = true;
             this.currentQuestion = this.questions[0];
