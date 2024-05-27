@@ -17,7 +17,7 @@ Vue.createApp({
             answer5: "",
             answer6: "",
             answer6: "",
-            selectedAnswer: null, // Array to hold selected answers for the current question
+            selectedAnswer: null, 
             request: "",
             done: "",
             language: "English",
@@ -31,7 +31,7 @@ Vue.createApp({
             learnMoreLink: "",
             currentQuestion: {},
             questionCount: 0,
-            apiKey: ""
+            apiKey: "AIzaSyCSbpfAp-KAwQSE2sg9VHkcGI9Mqb6AIrg"
         }
     },
     computed: {
